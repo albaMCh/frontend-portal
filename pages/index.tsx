@@ -1,8 +1,10 @@
 import { useState } from "react";
+import { useRouter } from "next/router";
 
 import { daysUntilNext } from "../utils/helpers";
 
 function Home2({ users }: any) {
+  const router = useRouter();
   const [searchTitle, setSearchTitle] = useState("");
 
   const onChangeSearchText = (event: any) => {
@@ -10,13 +12,15 @@ function Home2({ users }: any) {
     setSearchTitle(query);
   };
 
-  const search = () => {
-    window.location.href = "/users?query=" + searchTitle;
+  const search = (event: any) => {
+    const href = "/users?query=" + searchTitle;
+    event.preventDefault();
+    router.push(href);
   };
 
   const onSearchKeyPress = (event: any) => {
     if (event.key === "Enter") {
-      search();
+      search(event);
     }
   };
 
