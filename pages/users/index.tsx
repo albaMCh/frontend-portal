@@ -1,8 +1,6 @@
 import { useState } from "react";
 
-import { daysUntilNext } from "../utils/helpers";
-
-function Home2({ users }: any) {
+function Users({ users }: any) {
   const [searchTitle, setSearchTitle] = useState("");
 
   const onChangeSearchText = (event: any) => {
@@ -14,12 +12,6 @@ function Home2({ users }: any) {
     window.location.href = "/users?query=" + searchTitle;
   };
 
-  const onSearchKeyPress = (event: any) => {
-    if (event.key === "Enter") {
-      search();
-    }
-  };
-
   return (
     <div>
       <input
@@ -28,20 +20,13 @@ function Home2({ users }: any) {
         className="form-control"
         placeholder="Buscar"
         onChange={onChangeSearchText}
-        onKeyPress={onSearchKeyPress}
         value={searchTitle}
       />
       <button onClick={search}>Buscar</button>
       <ul>
         {users.map((user: any, index: number) => (
           <li key={index}>
-            <a href="">
-              <p>{user.firstName}</p>
-              <p>{user.lastName}</p>
-              <p>{user.age}</p>
-              <p>{user.birthDate}</p>
-              <p>Días próximo cumpleaños: {user.daysUntilNextBirthDate}</p>
-            </a>
+            <a href="">{user.firstName}</a>
           </li>
         ))}
       </ul>
@@ -52,33 +37,22 @@ function Home2({ users }: any) {
 // This function gets called at build time on server-side.
 // It won't be called on client-side, so you can even do
 // direct database queries.
-export async function getStaticProps() {
+export async function getStaticProps(context: any) {
   // Call an external API endpoint to get posts.
   // You can use any data fetching library
-  const res = await fetch("https://dummyjson.com/users");
+
+  console.log(context);
+  const query = context.query.query;
+  const res = await fetch("https://dummyjson.com/users/search?q=" + query);
   const data = await res.json();
-
-  let users = data.users.map((user: any) => {
-    const birthDate: Date = new Date(user.birthDate);
-    user.daysUntilNextBirthDate = daysUntilNext(
-      birthDate.getMonth() + 1,
-      birthDate.getDate()
-    );
-
-    return user;
-  });
-  users.sort(function (a: any, b: any) {
-    return a.daysUntilNextBirthDate - b.daysUntilNextBirthDate;
-  });
-  users = users.slice(0, 10);
 
   // By returning { props: { posts } }, the Blog component
   // will receive `posts` as a prop at build time
   return {
     props: {
-      users,
+      users: data.users,
     },
   };
 }
 
-export default Home2;
+export default Users;
