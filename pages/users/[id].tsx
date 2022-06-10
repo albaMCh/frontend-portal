@@ -37,13 +37,15 @@ function User({ user }: any) {
 
 export async function getStaticPaths() {
   // Call an external API endpoint to get posts
-  const res = await fetch("https://dummyjson.com/users/" + id);
-  const users = await res.json();
+  const res = await fetch("https://dummyjson.com/users");
+  const data = await res.json();
 
   // Get the paths we want to pre-render based on posts
-  const paths = users.map((user: any) => ({
-    params: { id: user.id },
+  const paths = data.users.map((user: any) => ({
+    params: { id: String(user.id) },
   }));
+
+  console.log("paths:", paths);
 
   // We'll pre-render only these paths at build time.
   // { fallback: false } means other routes should 404.
@@ -54,7 +56,7 @@ export async function getStaticPaths() {
 export async function getStaticProps({ params }: any) {
   // params contains the post `id`.
   // If the route is like /posts/1, then params.id is 1
-  const res = await fetch(`https://.../posts/${params.id}`);
+  const res = await fetch(`https://dummyjson.com/users/${params.id}`);
   const user = await res.json();
 
   // Pass post data to the page via props
