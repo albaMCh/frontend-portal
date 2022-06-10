@@ -1,14 +1,16 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
 
-import { daysUntilNext } from "../utils/helpers";
+import { daysUntilNext } from "../shared/utils/helpers";
 
-function Home2({ users }: any) {
+import { IUser } from "../shared/models/User";
+
+function Home2({ users }: { users: IUser[] }) {
   const router = useRouter();
   const [searchTitle, setSearchTitle] = useState("");
 
-  const onChangeSearchText = (event: any) => {
-    const query = event.target.value;
+  const onChangeSearchText = (e: any) => {
+    const query = e.target.value;
     setSearchTitle(query);
   };
 
