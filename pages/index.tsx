@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
-
+import Link from "next/link";
 import {
   getUsersWithDaysUntilBirthday,
   sortUsers,
@@ -9,26 +9,15 @@ import {
 import { IUser } from "../shared/models/User";
 import { getUsuarios } from "../shared/middleware/usuarios.middleware";
 
+import {
+  onChangeSearchText,
+  onSearchKeyPress,
+  search,
+} from "../shared/utils/search";
+
 function Home({ users }: { users: IUser[] }) {
   const router = useRouter();
   const [searchTitle, setSearchTitle] = useState("");
-
-  const onChangeSearchText = (e: any) => {
-    const query = e.target.value;
-    setSearchTitle(query);
-  };
-
-  const search = (event: any) => {
-    const href = "/usuarios?query=" + searchTitle;
-    event.preventDefault();
-    router.push(href);
-  };
-
-  const onSearchKeyPress = (event: any) => {
-    if (event.key === "Enter") {
-      search(event);
-    }
-  };
 
   return (
     <div>
@@ -37,21 +26,23 @@ function Home({ users }: { users: IUser[] }) {
         id="input-search"
         className="form-control"
         placeholder="Buscar"
-        onChange={onChangeSearchText}
-        onKeyPress={onSearchKeyPress}
+        onChange={(e) => onChangeSearchText(e, setSearchTitle)}
+        onKeyPress={(e) => onSearchKeyPress(e, router, searchTitle)}
         value={searchTitle}
       />
-      <button onClick={search}>Buscar</button>
+      <button onClick={(e) => search(e, router, searchTitle)}>Buscar</button>
       <ul>
         {users.map((user: any, index: number) => (
           <li key={index}>
-            <a href="">
-              <p>{user.firstName}</p>
-              <p>{user.lastName}</p>
-              <p>{user.age}</p>
-              <p>{user.birthDate}</p>
-              <p>Días próximo cumpleaños: {user.daysUntilNextBirthDate}</p>
-            </a>
+            <Link href={"/usuarios/" + user.id}>
+              <a>
+                <p>{user.firstName}</p>
+                <p>{user.lastName}</p>
+                <p>{user.age}</p>
+                <p>{user.birthDate}</p>
+                <p>Días próximo cumpleaños: {user.daysUntilNextBirthDate}</p>
+              </a>
+            </Link>
           </li>
         ))}
       </ul>
