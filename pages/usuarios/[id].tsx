@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 import { useRouter } from "next/router";
 
+import {
+  getUsuario,
+  getUsuarios,
+} from "../../shared/middleware/usuarios.middleware";
+
 function User({ user }: any) {
   const router = useRouter();
 
@@ -17,35 +22,14 @@ function User({ user }: any) {
   );
 }
 
-// This function gets called at build time on server-side.
-// It won't be called on client-side, so you can even do
-// direct database queries.
-/*export async function getServerSideProps(context: any) {
-  const id = context.params.id;
-
-  const url = "https://dummyjson.com/users/" + id;
-
-  const res = await fetch(url);
-  const data = await res.json();
-
-  return {
-    props: {
-      user: data,
-    },
-  };
-}*/
-
 export async function getStaticPaths() {
   // Call an external API endpoint to get posts
-  const res = await fetch("https://dummyjson.com/users");
-  const data = await res.json();
+  const response = await getUsuarios();
 
   // Get the paths we want to pre-render based on posts
-  const paths = data.users.map((user: any) => ({
+  const paths = response.data.map((user: any) => ({
     params: { id: String(user.id) },
   }));
-
-  console.log("paths:", paths);
 
   // We'll pre-render only these paths at build time.
   // { fallback: false } means other routes should 404.
@@ -56,11 +40,10 @@ export async function getStaticPaths() {
 export async function getStaticProps({ params }: any) {
   // params contains the post `id`.
   // If the route is like /posts/1, then params.id is 1
-  const res = await fetch(`https://dummyjson.com/users/${params.id}`);
-  const user = await res.json();
+  const response = await getUsuario(params.id);
 
   // Pass post data to the page via props
-  return { props: { user } };
+  return { props: { user: response.data } };
 }
 
 export default User;
