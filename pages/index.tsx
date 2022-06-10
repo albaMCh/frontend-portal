@@ -1,19 +1,25 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
 
-import { daysUntilNext } from "../utils/helpers";
+import {
+  getUsersWithDaysUntilBirthday,
+  sortUsers,
+} from "../shared/utils/helpers";
 
-function Home2({ users }: any) {
+import { IUser } from "../shared/models/User";
+import { getUsuarios } from "../shared/middleware/usuarios.middleware";
+
+function Home({ users }: { users: IUser[] }) {
   const router = useRouter();
   const [searchTitle, setSearchTitle] = useState("");
 
-  const onChangeSearchText = (event: any) => {
-    const query = event.target.value;
+  const onChangeSearchText = (e: any) => {
+    const query = e.target.value;
     setSearchTitle(query);
   };
 
   const search = (event: any) => {
-    const href = "/users?query=" + searchTitle;
+    const href = "/usuarios?query=" + searchTitle;
     event.preventDefault();
     router.push(href);
   };
@@ -59,21 +65,11 @@ function Home2({ users }: any) {
 export async function getStaticProps() {
   // Call an external API endpoint to get posts.
   // You can use any data fetching library
-  const res = await fetch("https://dummyjson.com/users");
-  const data = await res.json();
+  const response = await getUsuarios();
 
-  let users = data.users.map((user: any) => {
-    const birthDate: Date = new Date(user.birthDate);
-    user.daysUntilNextBirthDate = daysUntilNext(
-      birthDate.getMonth() + 1,
-      birthDate.getDate()
-    );
+  let users = getUsersWithDaysUntilBirthday(response.data);
+  sortUsers(users);
 
-    return user;
-  });
-  users.sort(function (a: any, b: any) {
-    return a.daysUntilNextBirthDate - b.daysUntilNextBirthDate;
-  });
   users = users.slice(0, 10);
 
   // By returning { props: { posts } }, the Blog component
@@ -85,4 +81,4 @@ export async function getStaticProps() {
   };
 }
 
-export default Home2;
+export default Home;

@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useRouter } from "next/router";
 
+import { getUsuarios } from "../shared/middleware/usuarios.middleware";
+
 function Users({ users, query }: any) {
   const router = useRouter();
   const [searchTitle, setSearchTitle] = useState(query);
@@ -24,7 +26,7 @@ function Users({ users, query }: any) {
 
   const search = (event: any, reset?: boolean) => {
     const query = reset ? "" : searchTitle;
-    let href = "/users";
+    let href = "/usuarios";
 
     if (query) {
       href += "?query=" + query;
@@ -50,7 +52,7 @@ function Users({ users, query }: any) {
       <ul>
         {users.map((user: any, index: number) => (
           <li key={index}>
-            <a href="">{user.firstName}</a>
+            <a href={"/usuarios/" + user.id}>{user.firstName}</a>
           </li>
         ))}
       </ul>
@@ -65,19 +67,15 @@ export async function getServerSideProps(context: any) {
   // Call an external API endpoint to get posts.
   // You can use any data fetching library
 
-  console.log(context);
   const query = context.query.query || "";
 
-  const url = "https://dummyjson.com/users/search?q=" + query;
-
-  const res = await fetch(url);
-  const data = await res.json();
+  const response = await getUsuarios({ query });
 
   // By returning { props: { posts } }, the Blog component
   // will receive `posts` as a prop at build time
   return {
     props: {
-      users: data.users,
+      users: response.data,
       query,
     },
   };
