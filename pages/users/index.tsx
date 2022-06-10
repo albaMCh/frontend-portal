@@ -1,15 +1,37 @@
-import { useState } from "react";
+import React, { useState } from "react";
+import { useRouter } from "next/router";
 
-function Users({ users }: any) {
-  const [searchTitle, setSearchTitle] = useState("");
+function Users({ users, query }: any) {
+  const router = useRouter();
+  const [searchTitle, setSearchTitle] = useState(query);
 
   const onChangeSearchText = (event: any) => {
     const query = event.target.value;
     setSearchTitle(query);
   };
 
-  const search = () => {
-    window.location.href = "/users?query=" + searchTitle;
+  const onSearchKeyPress = (event: any) => {
+    if (event.key === "Enter") {
+      search(event);
+    }
+  };
+
+  const reset = (event: any) => {
+    const newTitle = "";
+    setSearchTitle(newTitle);
+    search(event, true);
+  };
+
+  const search = (event: any, reset?: boolean) => {
+    const query = reset ? "" : searchTitle;
+    let href = "/users";
+
+    if (query) {
+      href += "?query=" + query;
+    }
+
+    event.preventDefault();
+    router.push(href);
   };
 
   return (
@@ -20,9 +42,11 @@ function Users({ users }: any) {
         className="form-control"
         placeholder="Buscar"
         onChange={onChangeSearchText}
+        onKeyPress={onSearchKeyPress}
         value={searchTitle}
       />
       <button onClick={search}>Buscar</button>
+      <button onClick={reset}>Limpiar</button>
       <ul>
         {users.map((user: any, index: number) => (
           <li key={index}>
@@ -54,6 +78,7 @@ export async function getServerSideProps(context: any) {
   return {
     props: {
       users: data.users,
+      query,
     },
   };
 }
