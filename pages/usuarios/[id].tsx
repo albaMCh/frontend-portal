@@ -6,11 +6,13 @@ import {
   getUsuarios,
 } from "../../shared/middleware/usuarios.middleware";
 
+import styles from "../../styles/Common.module.scss";
+
 function User({ user }: any) {
   const router = useRouter();
 
   return (
-    <div>
+    <div className={styles.card}>
       <div>Nombre: {user.firstName}</div>
       <div>Apellidos: {user.lastName}</div>
       <div>Edad: {user.age}</div>

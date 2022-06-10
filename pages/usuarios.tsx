@@ -4,6 +4,8 @@ import { useRouter } from "next/router";
 import { getUsuarios } from "../shared/middleware/usuarios.middleware";
 import Link from "next/link";
 
+import styles from "../styles/Common.module.scss";
+
 import {
   onChangeSearchText,
   onSearchKeyPress,
@@ -21,23 +23,36 @@ function Users({ users, query }: any) {
   };
 
   return (
-    <div>
+    <div className={styles.grid}>
       <input
         type="text"
         id="input-search"
-        className="form-control"
+        className={styles["search-input"]}
         placeholder="Buscar"
         onChange={(e) => onChangeSearchText(e, setSearchTitle)}
         onKeyPress={(e) => onSearchKeyPress(e, router, searchTitle)}
         value={searchTitle}
       />
-      <button onClick={(e) => search(e, router, searchTitle)}>Buscar</button>
-      <button onClick={reset}>Limpiar</button>
-      <ul>
+      <button
+        className={styles["search-button"]}
+        onClick={(e) => search(e, router, searchTitle)}
+      >
+        Buscar
+      </button>
+      <button className={styles["reset-button"]} onClick={reset}>
+        Limpiar
+      </button>
+      <ul className={styles["card-group"]}>
         {users.map((user: any, index: number) => (
-          <li key={index}>
+          <li key={index} className={styles.card}>
             <Link href={"/usuarios/" + user.id}>
-              <a>{user.firstName}</a>
+              <a>
+                <p>{user.firstName}</p>
+                <p>{user.lastName}</p>
+                <p>{user.age}</p>
+                <p>{user.birthDate}</p>
+                <p>Días próximo cumpleaños: {user.daysUntilNextBirthDate}</p>
+              </a>
             </Link>
           </li>
         ))}

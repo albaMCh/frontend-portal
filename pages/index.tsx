@@ -1,3 +1,6 @@
+import styles from "../styles/Common.module.scss";
+import homeStyles from "../styles/Home.module.scss";
+
 import { useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
@@ -20,20 +23,25 @@ function Home({ users }: { users: IUser[] }) {
   const [searchTitle, setSearchTitle] = useState("");
 
   return (
-    <div>
+    <div className={styles.grid}>
       <input
         type="text"
         id="input-search"
-        className="form-control"
+        className={styles["search-input"]}
         placeholder="Buscar"
         onChange={(e) => onChangeSearchText(e, setSearchTitle)}
         onKeyPress={(e) => onSearchKeyPress(e, router, searchTitle)}
         value={searchTitle}
       />
-      <button onClick={(e) => search(e, router, searchTitle)}>Buscar</button>
-      <ul>
+      <button
+        className={styles["search-button"]}
+        onClick={(e) => search(e, router, searchTitle)}
+      >
+        Buscar
+      </button>
+      <ul className={styles["card-group"]}>
         {users.map((user: any, index: number) => (
-          <li key={index}>
+          <li key={index} className={styles.card}>
             <Link href={"/usuarios/" + user.id}>
               <a>
                 <p>{user.firstName}</p>
