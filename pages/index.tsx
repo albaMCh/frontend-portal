@@ -24,21 +24,24 @@ function Home({ users }: { users: IUser[] }) {
 
   return (
     <div className={styles.grid}>
-      <input
-        type="text"
-        id="input-search"
-        className={styles["search-input"]}
-        placeholder="Buscar"
-        onChange={(e) => onChangeSearchText(e, setSearchTitle)}
-        onKeyPress={(e) => onSearchKeyPress(e, router, searchTitle)}
-        value={searchTitle}
-      />
-      <button
-        className={styles["search-button"]}
-        onClick={(e) => search(e, router, searchTitle)}
-      >
-        Buscar
-      </button>
+      <h1>Página de Inicio</h1>
+      <div>
+        <input
+          type="text"
+          id="input-search"
+          className={styles["search-input"]}
+          placeholder="Buscar"
+          onChange={(e) => onChangeSearchText(e, setSearchTitle)}
+          onKeyPress={(e) => onSearchKeyPress(e, router, searchTitle)}
+          value={searchTitle}
+        />
+        <button
+          className={styles["search-button"]}
+          onClick={(e) => search(e, router, searchTitle)}
+        >
+          Buscar
+        </button>
+      </div>
       <ul className={styles["card-group"]}>
         {users.map((user: any, index: number) => (
           <li key={index} className={styles.card}>

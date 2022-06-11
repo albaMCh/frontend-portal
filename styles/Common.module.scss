@@ -115,7 +115,8 @@
   color: #fff;
 }
 
-.reset-button {
+.reset-button,
+.return-button {
   height: 30px;
 }
 
@@ -128,4 +129,8 @@
   .card-group {
     grid-template-columns: repeat(1, 1fr);
   }
+}
+
+.buttons-bar {
+  margin: 1rem;
 }

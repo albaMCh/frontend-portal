@@ -24,6 +24,7 @@ function Users({ users, query }: any) {
 
   return (
     <div className={styles.grid}>
+      <h1>Listado Usuarios</h1>
       <input
         type="text"
         id="input-search"
