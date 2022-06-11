@@ -10,7 +10,7 @@ export function daysUntilNext(month: number, day: number): number {
 }
 
 export function getUsersWithDaysUntilBirthday(users: IUser[]) {
-  return users.map((user: any) => {
+  return users.map((user: IUser) => {
     const birthDate: Date = new Date(user.birthDate);
     user.daysUntilNextBirthDate = daysUntilNext(
       birthDate.getMonth() + 1,
@@ -25,4 +25,10 @@ export function sortUsers(users: IUser[]) {
   users.sort(function (a: any, b: any) {
     return a.daysUntilNextBirthDate - b.daysUntilNextBirthDate;
   });
+}
+
+export function getFormattedUsers(users: IUser[]) {
+  let res = getUsersWithDaysUntilBirthday(users);
+  sortUsers(res);
+  return res;
 }

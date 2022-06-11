@@ -4,6 +4,8 @@ import { useRouter } from "next/router";
 import { getUsuarios } from "../shared/middleware/usuarios.middleware";
 import Link from "next/link";
 
+import { getFormattedUsers } from "../shared/utils/helpers";
+
 import styles from "../styles/Common.module.scss";
 
 import {
@@ -73,11 +75,13 @@ export async function getServerSideProps(context: any) {
 
   const response = await getUsuarios({ query });
 
+  const users = getFormattedUsers(response.data);
+
   // By returning { props: { posts } }, the Blog component
   // will receive `posts` as a prop at build time
   return {
     props: {
-      users: response.data,
+      users,
       query,
     },
   };
