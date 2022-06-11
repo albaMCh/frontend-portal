@@ -4,10 +4,7 @@ import homeStyles from "../styles/Home.module.scss";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import {
-  getUsersWithDaysUntilBirthday,
-  sortUsers,
-} from "../shared/utils/helpers";
+import { getFormattedUsers } from "../shared/utils/helpers";
 
 import { IUser } from "../shared/models/User";
 import { getUsuarios } from "../shared/middleware/usuarios.middleware";
@@ -69,8 +66,7 @@ export async function getStaticProps() {
   // You can use any data fetching library
   const response = await getUsuarios();
 
-  let users = getUsersWithDaysUntilBirthday(response.data);
-  sortUsers(users);
+  let users = getFormattedUsers(response.data);
 
   users = users.slice(0, 10);
 

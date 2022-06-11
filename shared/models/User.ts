@@ -6,5 +6,5 @@ export interface IUser {
   email: string;
   phone: number;
   birthDate: Date;
-  image: string;
+  daysUntilNextBirthDate?: number;
 }
